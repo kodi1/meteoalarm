@@ -41,7 +41,7 @@ automation:
             {% endif %}
 ```
 ![Screenshot](https://github.com/kodi1/meteoalarm/blob/master/images/notification.png?raw=true)
-## lovlace alert - Flex Table Card
+## lovlace alert - Markdown Card
 ```yaml
 cards:
   - type: conditional
@@ -49,40 +49,21 @@ cards:
       - entity: sensor.w_alert
         state_not: '0'
     card:
-      type: custom:flex-table-card
-      title: today
-      entities:
-        include: sensor.w_alert
-      columns:
-        - attr_as_list: today
-          modify: x.code.concat(' ', x.event)
-          name: event
-        - attr_as_list: today
-          modify: x.txt
-          name: description
-        - attr_as_list: today
-          modify: x.end
-          name: expire
-
-  - type: conditional
-    conditions:
-      - entity: sensor.w_alert
-        state_not: '0'
-    card:
-      type: custom:flex-table-card
-      title: tomorrow
-      entities:
-        include: sensor.w_alert
-      columns:
-        - attr_as_list: tomorrow
-          modify: x.code.concat(' ', x.event)
-          name: event
-        - attr_as_list: tomorrow
-          modify: x.txt
-          name: description
-        - attr_as_list: tomorrow
-          modify: x.end
-          name: expire
+      type: markdown
+      content: >-
+        {%- if not is_state('sensor.w_alert', '0') -%}
+          {%- for s  in ['today', 'tomorrow'] -%}
+            {%- set v = state_attr('sensor.w_alert', s) -%}
+              {%- if v -%}
+                {%- for d  in v %}
+          ### {{s}}: **{{d['event']}}**
+          **Severity:** {{d['code']}}
+          **Description:** {{d['txt']}}
+          **Time:** {{d['start']}} - {{d['end']}}
+                {%- endfor -%}
+              {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
 ```
 ![Screenshot](https://github.com/kodi1/meteoalarm/blob/master/images/alert.png?raw=true)
 
