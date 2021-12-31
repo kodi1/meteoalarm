@@ -4,6 +4,6 @@
   "documentation": "https://github.com/kodi1/meteoalarm",
   "dependencies": [],
   "codeowners": ["@kodi1"],
-  "requirements": [],
+  "requirements": ["bs4==0.0.1"],
   "version": "0.0.1"
 }
